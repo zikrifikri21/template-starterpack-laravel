@@ -19,8 +19,8 @@ import { http } from '@/lib/http';
 import { cn } from '@/lib/utils';
 
 type Message = {
-    id: number;
-    user_id: number;
+    id: string;
+    user_id: string;
     name: string | null;
     avatar: string | null;
     message: string;
@@ -101,7 +101,7 @@ function MessageList({
     me,
 }: {
     messages: Message[] | null;
-    me: number;
+    me: string;
 }) {
     const end = useRef<HTMLDivElement>(null);
     const initials = useInitials();

@@ -15,7 +15,7 @@ class ChatController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(
-            Messages::with('user:id,username,picture_profile')->latest('id')->limit(30)->get()->reverse()->values()->map($this->payload(...))
+            Messages::with('user:id,username,picture_profile')->latest()->latest('id')->limit(30)->get()->reverse()->values()->map($this->payload(...))
         );
     }
 

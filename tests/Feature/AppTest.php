@@ -62,3 +62,14 @@ it('saves a chat message server-side, ignoring client-sent identity', function (
     $this->actingAs($u)->postJson('/notif/kirim', ['unread' => 3])->assertOk();
     $this->actingAs($u)->get('/dashboard')->assertInertia(fn (Assert $p) => $p->where('notifmsg', 3));
 });
+
+it('uses non-guessable UUID keys for users and chat messages', function () use ($as) {
+    $u = $as('user');
+    expect(Str::isUuid($u->id))->toBeTrue();
+    $this->actingAs($u)->postJson('/kirim', ['message' => 'halo'])->assertJson(fn ($j) => $j->where('id', fn ($id) => Str::isUuid($id))->etc());
+
+    $this->actingAs($as('superadmin'))->put('/user-manage/1', ['username' => 'x'])->assertNotFound();
+
+    $this->actingAs($as('superadmin'))->delete('/user-manage/0', ['ids' => [$u->id]])->assertRedirect();
+    expect(User::find($u->id))->toBeNull();
+});

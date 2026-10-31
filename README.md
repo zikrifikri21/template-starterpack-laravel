@@ -43,9 +43,12 @@ Setelah itu daftarkan menunya lewat **Manage Menu** (url = nama route) dan centa
 4. Pertahankan nama route lama kalau tersimpan di DB (`menu.url`). Alur aplikasi jangan diubah, kecuali ada bug.
 5. Upload lama tetap di `public/storage/{folder}`. Pakai `storeLegacy()`/`deleteLegacy()` dari `Controller`.
 6. Opsi `.env` untuk DB lama:
-   - `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`: tidak butuh tabel Laravel.
-   - `DB_STRICT=false` kalau server lama berjalan non-strict (zero dates, insert longgar).
-   - `DB_LEGACY_LATIN1=true` kalau tabelnya latin1: karakter yang tidak muat (emoji) disimpan sebagai `?`, bukan error.
+    - `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`: tidak butuh tabel Laravel.
+    - `DB_STRICT=false` kalau server lama berjalan non-strict (zero dates, insert longgar).
+    - `DB_LEGACY_LATIN1=true` kalau tabelnya latin1: karakter yang tidak muat (emoji) disimpan sebagai `?`, bukan error.
+
+Tabel `user` dan `messages` memakai UUID v7 (`HasUuids`) supaya ID di URL/JSON tidak bisa ditebak; tabel baru yang ID-nya terekspos sebaiknya ikut (`$t->uuid('id')->primary()` + `use HasUuids`, FK pakai `foreignUuid`).
+Kalau dump lama memakai ID integer untuk user, hapus `HasUuids` dari model dan kembalikan kolomnya ke integer agar cocok dengan dump.
 
 Kalau struktur tabel user/role/menu di aplikasi lama berbeda, sesuaikan model `User`, `Userlevel`, `Menu`, `Access` dan `HandleInertiaRequests::menu()`.
 

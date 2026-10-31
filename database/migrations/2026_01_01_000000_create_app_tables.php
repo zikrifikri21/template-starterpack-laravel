@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Users, roles, menu-driven sidebar, access, profile info and group chat.
  * Every table is skipped if it already exists, so `migrate` is safe on a database imported from a legacy dump.
+ * user and messages use UUID (v7, time-ordered) keys: they show up in URLs and JSON, so ids must not be guessable.
  * Porting a legacy app: reverse-engineer its tables here (same names/types as the dump), guarded the same way.
  */
 return new class extends Migration
@@ -23,7 +24,7 @@ return new class extends Migration
 
         if (! Schema::hasTable('user')) {
             Schema::create('user', function (Blueprint $t) {
-                $t->id();
+                $t->uuid('id')->primary();
                 $t->string('username')->unique();
                 $t->string('password');
                 $t->string('email')->unique();
@@ -66,16 +67,16 @@ return new class extends Migration
                 $t->integer('phone')->nullable();
                 $t->string('job')->nullable();
                 $t->string('address')->nullable();
-                $t->foreignId('user_id')->constrained('user');
+                $t->foreignUuid('user_id')->constrained('user')->cascadeOnDelete();
                 $t->timestamps();
             });
         }
 
         if (! Schema::hasTable('messages')) {
             Schema::create('messages', function (Blueprint $t) {
-                $t->integer('id', true);
+                $t->uuid('id')->primary();
                 $t->mediumText('messages');
-                $t->integer('id_user')->default(0);
+                $t->foreignUuid('id_user')->constrained('user')->cascadeOnDelete();
                 $t->dateTime('created_at');
                 $t->dateTime('updated_at');
                 $t->string('lampiran', 200)->nullable();
@@ -85,7 +86,7 @@ return new class extends Migration
         if (! Schema::hasTable('notif_chat_user')) {
             Schema::create('notif_chat_user', function (Blueprint $t) {
                 $t->integer('id', true);
-                $t->integer('id_user');
+                $t->foreignUuid('id_user')->unique()->constrained('user')->cascadeOnDelete();
                 $t->integer('unread')->default(0);
                 $t->dateTime('created_at')->nullable();
                 $t->dateTime('update_at')->nullable(); // sic, legacy column name

@@ -22,7 +22,7 @@ export function ConfirmDelete({
     trigger,
 }: {
     url: string;
-    data?: Record<string, string | number[]>;
+    data?: Record<string, string | (string | number)[]>;
     title?: string;
     trigger?: ReactNode;
 }) {

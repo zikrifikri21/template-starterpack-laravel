@@ -56,7 +56,7 @@ class UserManageController extends Controller
     /** Legacy deleted a checkbox selection (ids[]) through AJAX; same, via Inertia. */
     public function destroy(Request $request): RedirectResponse
     {
-        $ids = array_diff((array) $request->validate(['ids' => 'required|array'])['ids'], [$request->user()->id]);
+        $ids = array_diff((array) $request->validate(['ids' => 'required|array', 'ids.*' => 'uuid'])['ids'], [$request->user()->id]);
 
         foreach (User::whereKey($ids)->get() as $user) {
             $this->deleteLegacy($user->picture_profile);

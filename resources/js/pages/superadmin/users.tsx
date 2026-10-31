@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Pencil, Trash2, UserAdd } from '@/lib/icons';
 
 type Row = {
-    id: number;
+    id: string;
     username: string;
     email: string;
     user_role_id: number;
@@ -105,8 +105,8 @@ export default function Users({
     list: Row[];
     levels: Record<string, string>;
 }) {
-    const [selected, setSelected] = useState<number[]>([]);
-    const toggle = (id: number, on: boolean) =>
+    const [selected, setSelected] = useState<string[]>([]);
+    const toggle = (id: string, on: boolean) =>
         setSelected((s) => (on ? [...s, id] : s.filter((x) => x !== id)));
 
     return (

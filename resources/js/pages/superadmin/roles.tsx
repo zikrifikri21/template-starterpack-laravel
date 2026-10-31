@@ -19,7 +19,7 @@ import { Pencil, Plus } from '@/lib/icons';
 type Level = {
     id: number;
     nama: string;
-    users: { id: number; username: string; avatar: string | null }[];
+    users: { id: string; username: string; avatar: string | null }[];
 };
 
 export default function Roles({ level }: { level: Level[] }) {
