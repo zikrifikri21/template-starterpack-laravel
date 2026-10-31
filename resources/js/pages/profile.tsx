@@ -17,7 +17,7 @@ type Info = {
     nickname?: string | null;
     gender?: 'L' | 'P' | 'Null' | null;
     bday?: string | null;
-    phone?: number | null;
+    phone?: string | null;
     job?: string | null;
     address?: string | null;
 };
@@ -148,9 +148,9 @@ export default function Profile({ info }: { info: Info }) {
                                         <Input
                                             id="phoneNumber"
                                             name="phoneNumber"
-                                            inputMode="numeric"
+                                            type="tel"
                                             defaultValue={info.phone ?? ''}
-                                            placeholder="831234567"
+                                            placeholder="081234567890"
                                         />
                                     </Field>
                                     <Field

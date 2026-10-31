@@ -47,12 +47,9 @@ export const MessageIcon = make(I.Comment01Icon);
 export const Layers = make(I.Layers01Icon);
 export const Phone = make(I.CallIcon);
 export const ArrowLeft = make(I.ArrowLeft01Icon);
-export const Attachment = make(I.Attachment01Icon);
 export const Login = make(I.Login01Icon);
 export const UserAdd = make(I.UserAdd01Icon);
 
-export const Chat = make(I.Message01Icon);
-export const Send = make(I.SentIcon);
 export const Server = make(I.ServerStack01Icon);
 export const Device = make(I.LaptopIcon);
 export const Ticket = make(I.Ticket01Icon);

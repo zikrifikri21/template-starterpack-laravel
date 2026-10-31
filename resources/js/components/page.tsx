@@ -41,7 +41,7 @@ export function Page({
     );
 }
 
-/** Legacy "summary card": a label and a big number. */
+/** Summary card: a label and a big number. */
 export function StatCard({
     label,
     value,

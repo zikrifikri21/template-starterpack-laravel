@@ -8,6 +8,7 @@ use App\Models\Userlevel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -44,7 +45,7 @@ class UserManageController extends Controller
         }
 
         if (isset($data['picture_profile'])) {
-            $this->deleteLegacy($info->picture_profile);
+            Storage::disk('public')->delete((string) $info->picture_profile);
         }
 
         $info->update($data);
@@ -53,13 +54,13 @@ class UserManageController extends Controller
         return back();
     }
 
-    /** Legacy deleted a checkbox selection (ids[]) through AJAX; same, via Inertia. */
+    /** Bulk delete of the checked rows (ids[]); never the signed-in user. */
     public function destroy(Request $request): RedirectResponse
     {
         $ids = array_diff((array) $request->validate(['ids' => 'required|array', 'ids.*' => 'uuid'])['ids'], [$request->user()->id]);
 
         foreach (User::whereKey($ids)->get() as $user) {
-            $this->deleteLegacy($user->picture_profile);
+            Storage::disk('public')->delete((string) $user->picture_profile);
             $user->delete();
         }
 
@@ -80,7 +81,7 @@ class UserManageController extends Controller
         ]);
 
         if ($request->hasFile('picture_profile')) {
-            $data['picture_profile'] = $this->storeLegacy($request->file('picture_profile'), 'profile_user', $request->user()->id.'-'.time());
+            $data['picture_profile'] = $request->file('picture_profile')->store('profile_user', 'public');
         } else {
             unset($data['picture_profile']);
         }

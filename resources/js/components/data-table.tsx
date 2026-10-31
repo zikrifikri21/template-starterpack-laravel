@@ -22,7 +22,7 @@ export type Column<T> = {
 const PAGE_SIZE = 10;
 
 /**
- * Replaces the legacy jQuery DataTables: client-side search + paging.
+ * Client-side search + paging.
  * ponytail: filters in the browser over all rows; switch to server pagination if a table outgrows a few thousand rows.
  */
 export function DataTable<T>({

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Trash2 } from '@/lib/icons';
 
-/** "Apakah anda yakin ingin menghapus?" modal from the legacy pages, as one component. */
+/** "Apakah anda yakin ingin menghapus?" confirmation modal. */
 export function ConfirmDelete({
     url,
     data,

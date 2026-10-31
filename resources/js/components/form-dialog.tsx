@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 
-/** Add/edit modal (legacy "tambah"/"edit" Bootstrap modals). `put` is sent as POST + _method so file inputs work. */
+/** Add/edit modal. `put` is sent as POST + _method so file inputs work. */
 export function FormDialog({
     trigger,
     title,

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Roles
 {
-    /** Usage: Roles:1-3-5 (user.user_role_id values), as in the legacy routes. */
+    /** Usage: Roles:1-2 (user.user_role_id values, '-' separated). */
     public function handle(Request $request, Closure $next, string $roles): Response
     {
         if (in_array((string) $request->user()->user_role_id, explode('-', $roles), true)) {
@@ -18,7 +18,7 @@ class Roles
 
         Inertia::flash('toast', ['type' => 'error', 'message' => 'Tidak Mempunyai Hak Akses Tersebut']);
 
-        // Legacy used back(), which loops on direct URL hits; the dashboard is every role's home.
+        // Not back(): it loops on direct URL hits. The dashboard is every role's home.
         return redirect('/dashboard');
     }
 }

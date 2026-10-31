@@ -57,7 +57,7 @@ return [
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
             'prefix' => '',
             'prefix_indexes' => true,
-            'strict' => env('DB_STRICT', true),
+            'strict' => true,
             'engine' => null,
             // TIMESTAMP columns are stored as UTC and read in the session zone; WIB matches config('app.timezone').
             'timezone' => env('DB_TIMEZONE', '+07:00'),
@@ -128,9 +128,6 @@ return [
     | the migrations on disk haven't actually been run on the database.
     |
     */
-
-    // See App\Http\Middleware\Latin1Input.
-    'legacy_latin1' => (bool) env('DB_LEGACY_LATIN1', false),
 
     'migrations' => [
         'table' => 'migrations',

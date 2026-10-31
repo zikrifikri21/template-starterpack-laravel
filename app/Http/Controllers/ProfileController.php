@@ -6,6 +6,7 @@ use App\Models\UserInfo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -27,7 +28,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    // {profile_user} is ignored: legacy updated User::find($id), letting anyone edit any account.
+    // {profile_user} is ignored: users only ever edit their own account.
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
@@ -40,7 +41,7 @@ class ProfileController extends Controller
             'gender' => ['nullable', Rule::in(['L', 'P'])],
             'nickname' => 'nullable|string|max:255',
             'bday' => 'nullable|date',
-            'phoneNumber' => 'nullable|digits_between:1,10', // info_user.phone is int(11)
+            'phoneNumber' => 'nullable|string|max:20',
             'job' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
@@ -53,8 +54,8 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('imageUser')) {
-            $this->deleteLegacy($user->picture_profile);
-            $user->picture_profile = $this->storeLegacy($request->file('imageUser'), 'profile_user', $user->username.time());
+            Storage::disk('public')->delete((string) $user->picture_profile);
+            $user->picture_profile = $request->file('imageUser')->store('profile_user', 'public');
         }
 
         $user->save();

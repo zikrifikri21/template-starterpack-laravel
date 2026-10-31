@@ -1,30 +1,13 @@
-const MONTHS = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'Mei',
-    'Jun',
-    'Jul',
-    'Agu',
-    'Sep',
-    'Okt',
-    'Nov',
-    'Des',
-];
+// Fixed locale + zone so SSR (Node) and the browser print the same text; match config/app.php timezone.
+const dateTime = new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Jakarta',
+});
 
-/**
- * "2026-10-30 14:05:00" (or ISO) -> "30 Okt 2026 14.05". Pure string work, no Date/timezone:
- * DB values are already WIB wall-clock, and SSR + browser must print the same text.
- */
+/** ISO timestamp from Laravel ("2026-10-30T07:05:00.000000Z") -> "30 Okt 2026, 14.05". */
 export function formatDateTime(value: string | null | undefined): string {
-    const m = value?.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+    const date = value ? new Date(value) : null;
 
-    if (!m) {
-        return value || '-';
-    }
-
-    const [, y, mo, d, h, mi] = m;
-
-    return `${Number(d)} ${MONTHS[Number(mo) - 1]} ${y}${h ? ` ${h}.${mi}` : ''}`;
+    return date && !isNaN(date.getTime()) ? dateTime.format(date) : '-';
 }

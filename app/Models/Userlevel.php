@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Userlevel extends LegacyModel
+class Userlevel extends Model
 {
     protected $table = 'user_role';
 

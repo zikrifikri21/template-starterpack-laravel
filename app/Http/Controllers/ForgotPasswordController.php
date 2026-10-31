@@ -66,7 +66,7 @@ class ForgotPasswordController extends Controller
             'confirm_password' => 'required|same:password',
         ]);
 
-        // Legacy looked the user up by a hidden email field, so anyone could reset any account; the emailed token is required now.
+        // The emailed token identifies the user, never a form field.
         $user = User::where('token', $request->token)->first();
 
         if (! $user) {

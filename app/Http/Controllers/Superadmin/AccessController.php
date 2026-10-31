@@ -26,7 +26,7 @@ class AccessController extends Controller
         ]);
     }
 
-    /** Replace the role's whole menu set with the checked boxes, as legacy did. */
+    /** Replace the role's whole menu set with the checked boxes. */
     public function update(Request $request, Userlevel $access_rights_of_each_user): RedirectResponse
     {
         $ids = $request->validate(['menu_id' => 'array', 'menu_id.*' => 'integer|exists:menu,id'])['menu_id'] ?? [];

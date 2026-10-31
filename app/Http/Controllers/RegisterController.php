@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
-// ponytail: legacy reCAPTCHA v3 package has no Laravel 13 release; the route is throttled instead.
+// ponytail: throttled, no CAPTCHA; add one if bots get through.
 class RegisterController extends Controller
 {
     public function index(): Response

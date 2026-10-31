@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
@@ -39,9 +38,4 @@ Route::middleware('auth')->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('profile-user', ProfileController::class)->only('index', 'update');
-
-    // Group chat (realtime via Reverb)
-    Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('kirim', [ChatController::class, 'store'])->name('chat.store');
-    Route::post('notif/kirim', [ChatController::class, 'unread'])->name('chat.unread');
 });

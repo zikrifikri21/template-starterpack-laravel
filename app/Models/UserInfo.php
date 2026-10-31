@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class UserInfo extends LegacyModel
+use Illuminate\Database\Eloquent\Model;
+
+class UserInfo extends Model
 {
     protected $table = 'info_user';
 

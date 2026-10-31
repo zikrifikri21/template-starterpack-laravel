@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-// Legacy also ran `artisan make:controller` and rewrote routes/web.php from form input when a menu was
-// created (runtime code generation from a web request); dropped. Controllers are written in code.
 class MenuManageController extends Controller
 {
     public function index(): Response

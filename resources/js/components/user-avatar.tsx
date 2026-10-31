@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-/** Profile photo with the default avatar when there is none or the file is missing (legacy uploads may be gone). */
+/** Profile photo with the default avatar when there is none or the file is missing. */
 export function UserAvatar({
     src,
     alt = '',

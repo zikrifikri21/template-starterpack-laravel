@@ -12,7 +12,6 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             menu: MenuEntry[];
-            notifmsg: number;
             sidebarOpen: boolean;
             [key: string]: unknown;
         };

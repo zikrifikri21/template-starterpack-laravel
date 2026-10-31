@@ -6,7 +6,6 @@ use App\Models\Access;
 use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 
@@ -32,14 +31,12 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
             ],
             'menu' => fn () => $user ? $this->menu($user) : [],
-            // Unread group-chat counter (legacy ShareDataForView middleware).
-            'notifmsg' => fn () => $user ? (int) DB::table('notif_chat_user')->where('id_user', $user->id)->value('unread') : 0,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
 
     /**
-     * Sidebar from access -> menu, as the legacy view composer did. menu.url holds a route name.
+     * Sidebar from access -> menu. menu.url holds a route name.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -55,7 +52,7 @@ class HandleInertiaRequests extends Middleware
 
         $subs = Menu::whereIn('is_main_menu', $menus->pluck('id'))->where('is_aktif', 'y')->orderBy('id')->get()->groupBy('is_main_menu');
 
-        // Legacy called route() blindly, so one bad url in the menu table took down every page.
+        // A menu url that isn't a route renders without a link instead of crashing every page.
         $href = fn (Menu $m) => Route::has($m->url) ? route($m->url, absolute: false) : null;
 
         return $menus->map(fn (Menu $m) => [

@@ -2,6 +2,9 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
@@ -53,23 +56,26 @@ it('updates only the signed-in profile', function () use ($as) {
         ->and($as('user2')->email)->toBe('u2@example.test');
 });
 
-it('saves a chat message server-side, ignoring client-sent identity', function () use ($as) {
-    $u = $as('user');
-    $this->actingAs($u)->postJson('/kirim', ['message' => 'halo', 'id' => 999, 'name' => 'spoof'])
-        ->assertOk()->assertJson(['user_id' => $u->id, 'name' => 'user', 'message' => 'halo']);
-
-    $this->actingAs($u)->getJson('/chat')->assertOk()->assertJsonCount(1);
-    $this->actingAs($u)->postJson('/notif/kirim', ['unread' => 3])->assertOk();
-    $this->actingAs($u)->get('/dashboard')->assertInertia(fn (Assert $p) => $p->where('notifmsg', 3));
-});
-
-it('uses non-guessable UUID keys for users and chat messages', function () use ($as) {
+it('uses non-guessable UUID keys for users', function () use ($as) {
     $u = $as('user');
     expect(Str::isUuid($u->id))->toBeTrue();
-    $this->actingAs($u)->postJson('/kirim', ['message' => 'halo'])->assertJson(fn ($j) => $j->where('id', fn ($id) => Str::isUuid($id))->etc());
 
     $this->actingAs($as('superadmin'))->put('/user-manage/1', ['username' => 'x'])->assertNotFound();
 
     $this->actingAs($as('superadmin'))->delete('/user-manage/0', ['ids' => [$u->id]])->assertRedirect();
     expect(User::find($u->id))->toBeNull();
+});
+
+it('stores the profile photo on the public disk and replaces the old one', function () use ($as) {
+    Storage::fake('public');
+    $put = fn () => $this->actingAs($as('user'))->put('/profile-user/0', ['uname' => 'user', 'email' => 'user@example.test', 'imageUser' => UploadedFile::fake()->image('a.jpg')]);
+
+    $put();
+    $first = $as('user')->picture_profile;
+    Storage::disk('public')->assertExists($first);
+    expect($as('user')->avatarUrl())->toContain($first);
+
+    $put();
+    Storage::disk('public')->assertMissing($first);
+    Storage::disk('public')->assertExists($as('user')->picture_profile);
 });

@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { ArrowLeft } from '@/lib/icons';
 
-/** Legacy "Halaman Detail ..." create/edit page: back link + card form. Edits POST with _method=put (file-safe). */
+/** Full-page create/edit form: back link + card form. Edits POST with _method=put (file-safe). */
 export function FormPage({
     title,
     description,
